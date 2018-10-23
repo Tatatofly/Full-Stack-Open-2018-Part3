@@ -24,12 +24,24 @@ let persons = [
     }
   ]
 
+
 app.get('/info', (req, res) => {
     res.send('<div>Puhelinluettelossa on '+ persons.length +' henkilön tiedot</div><br/><div>'+ new Date() +'</div>')
 })
 
 app.get('/api/persons', (req, res) => {
     res.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+  
+    if ( person ) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
 })
     
 
