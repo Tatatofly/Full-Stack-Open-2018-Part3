@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const morgan = require('morgan')
+const cors = require('cors')
 
 let persons = [
     {
@@ -28,9 +29,10 @@ let persons = [
 
 
 morgan.token('content', function (req, res) { 
-  console.log(req)
   return JSON.stringify(req['body']) })
 
+  
+app.use(cors())
 app.use(morgan(function (tokens, req, res) {
   return [
     tokens.method(req, res),

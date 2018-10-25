@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Tatatofly/Full-Stack-Open-2018-Part3#readme",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.16.4",
     "morgan": "^1.9.1"
   },
