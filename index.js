@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+const mongoose = require('mongoose')
 
 let persons = [
     {
@@ -45,24 +47,41 @@ app.use(morgan(function (tokens, req, res) {
 }))
 app.use(bodyParser.json())
 
+const formatPerson = (person) => {
+  return {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+}
 
 app.get('/info', (req, res) => {
-    res.send('<div>Puhelinluettelossa on '+ persons.length +' henkilön tiedot</div><br/><div>'+ new Date() +'</div>')
+  Person
+  .find({})
+  .then(person => {
+    const persCount = person.length
+    res.send('<div>Puhelinluettelossa on '+ persCount +' henkilön tiedot</div><br/><div>'+ new Date() +'</div>')
+  })
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+  Person
+  .find({})
+  .then(person => {
+    res.json(person.map(formatPerson))
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-  
-    if ( person ) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
+    Person
+    .findById(new mongoose.Types.ObjectId(request.params.id))
+    .then(person => {
+      if(person){
+        response.json(formatPerson(person))
+      } else{
+        response.status(404).end()
+      }
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
