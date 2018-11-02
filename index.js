@@ -91,7 +91,7 @@ app.get('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
-      response.status(400).send({ error: 'malformatted id' })
+      response.status(400).send({ error: 'Malformatted id' })
     })
 })
 
@@ -102,7 +102,7 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
    })
   .catch(error => {
-    response.status(400).send({ error: 'malformatted id' })
+    response.status(400).send({ error: 'Malformatted id' })
   })
 })
 
@@ -145,7 +145,7 @@ app.put('/api/persons/:id', (request, response) => {
     })
     .catch(error => {
       console.log(error)
-      response.status(400).send({ error: 'malformatted id' })
+      response.status(400).send({ error: 'Malformatted id' })
     })
 })
     
