@@ -128,13 +128,26 @@ app.post('/api/persons', (request, response) => {
       .then(savedPerson => {
         response.json(formatPerson(savedPerson))
       })
+})
 
-    /*
-    const pers = persons.find(pers => pers.name === body.name)
-    if (pers) {
-        return response.status(400).json({error: 'Name already exists (must be unique)'})
-    }*/
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+
+  const person = ({
+    name: body.name,
+    number: body.number,
   })
+
+  Person
+    .findByIdAndUpdate(request.params.id, person, { new: true } )
+    .then(updatedPerson => {
+      response.json(formatPerson(updatedPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
+})
     
 
 const PORT = process.env.PORT || 3001
