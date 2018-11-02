@@ -4,7 +4,6 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
-const mongoose = require('mongoose')
 
 let persons = [
     {
@@ -62,6 +61,10 @@ app.get('/info', (req, res) => {
     const persCount = person.length
     res.send('<div>Puhelinluettelossa on '+ persCount +' henkilön tiedot</div><br/><div>'+ new Date() +'</div>')
   })
+  .catch(error => {
+    console.log(error)
+    res.status(404).end()
+  })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -70,11 +73,15 @@ app.get('/api/persons', (req, res) => {
   .then(person => {
     res.json(person.map(formatPerson))
   })
+  .catch(error => {
+    console.log(error)
+    res.status(404).end()
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     Person
-    .findById(new mongoose.Types.ObjectId(request.params.id))
+    .findById(request.params.id)
     .then(person => {
       if(person){
         response.json(formatPerson(person))
@@ -82,13 +89,21 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
       }
     })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-  
+  Person
+  .findByIdAndRemove(request.params.id)
+  .then(result => {
     response.status(204).end()
+   })
+  .catch(error => {
+    response.status(400).send({ error: 'malformatted id' })
+  })
 })
 
 const generateId = () => {
