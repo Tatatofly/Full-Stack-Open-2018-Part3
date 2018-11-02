@@ -117,17 +117,29 @@ app.post('/api/persons', (request, response) => {
       return response.status(400).json({error: 'Name or number missing'})
     }
 
-    const person = new Person({
-      name: body.name,
-      number: body.number,
-      id: generateId()
+    Person
+    .find({name: body.name})
+    .then(result => {
+      if(result.length > 0){
+        response.status(400).send({ error: 'Already exists' })
+      } else {
+          const person = new Person({
+            name: body.name,
+            number: body.number,
+            id: generateId()
+          })
+        
+          person
+            .save()
+            .then(savedPerson => {
+              response.json(formatPerson(savedPerson))
+            })
+        }
     })
-  
-    person
-      .save()
-      .then(savedPerson => {
-        response.json(formatPerson(savedPerson))
-      })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'Something went wrong ¯\_(ツ)_/¯' })
+    })
 })
 
 app.put('/api/persons/:id', (request, response) => {
