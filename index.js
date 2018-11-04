@@ -138,7 +138,7 @@ app.post('/api/persons', (request, response) => {
     })
     .catch(error => {
       console.log(error)
-      response.status(400).send({ error: 'Something went wrong ¯\_(ツ)_/¯' })
+      response.status(400).send({ error: 'Something went wrong ¯\_(ツ)_/¯ ' })
     })
 })
 
